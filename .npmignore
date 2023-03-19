@@ -2,3 +2,4 @@ jest*.mjs
 tsconfig.json
 coverage/
 .github/
+cloud.service
