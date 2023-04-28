@@ -68,7 +68,7 @@ describe('system commands', () => {
     expect(exec.exec).toHaveBeenCalledTimes(1);
   });
 
-  it('should retrieve cloudy logs', () => {
+  it('should retrieve cloudy logs', async () => {
     const output = { ...execOutput, stdout: 'logs' };
     jest
       .spyOn(exec, 'exec')
