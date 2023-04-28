@@ -1,6 +1,6 @@
-import sys from './index';
 import fs from 'fs';
 import * as exec from '@cloud-cli/exec';
+import sys from './index';
 
 const execOutput = {
   ok: true,
@@ -66,6 +66,20 @@ describe('system commands', () => {
 
     await expect(sys.install({ m: 'foo' })).rejects.toEqual(new Error('npm failed'));
     expect(exec.exec).toHaveBeenCalledTimes(1);
+  });
+
+  it('should retrieve cloudy logs', () => {
+    const output = { ...execOutput, stdout: 'logs' };
+    jest
+      .spyOn(exec, 'exec')
+      .mockReset()
+      .mockImplementationOnce(async () => output);
+
+    const logs = await sys.logs({ lines: 50 });
+
+    expect(exec.exec).toHaveBeenCalledTimes(1);
+    expect(exec.exec).toHaveBeenCalledWith('journalctl', ['-n', '50', '_PID=' + process.pid]);
+    expect(logs).toBe('logs');
   });
 
   it('should restart the cloud CLI server', async () => {

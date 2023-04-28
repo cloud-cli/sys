@@ -48,4 +48,11 @@ WantedBy=multi-user.target
   return true;
 }
 
+function logs(options) {
+  const args = ['-n', String(options.lines || 100), '_PID=' + process.pid];
+  const o = await exec('journalctl', args);
+
+  return o.stdout;
+}
+
 export default { update, install, restart, createService };
