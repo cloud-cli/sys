@@ -73,13 +73,16 @@ describe('system commands', () => {
     jest
       .spyOn(exec, 'exec')
       .mockReset()
-      .mockImplementationOnce(async () => output);
+      .mockImplementation(async () => output);
 
-    const logs = await sys.logs({ lines: 50 });
+    const logs1 = await sys.logs({});
+    const logs2 = await sys.logs({ lines: 50 });
 
-    expect(exec.exec).toHaveBeenCalledTimes(1);
+    expect(exec.exec).toHaveBeenCalledTimes(2);
     expect(exec.exec).toHaveBeenCalledWith('journalctl', ['-n', '50', '_PID=' + process.pid]);
-    expect(logs).toBe('logs');
+    expect(exec.exec).toHaveBeenCalledWith('journalctl', ['-n', '100', '_PID=' + process.pid]);
+    expect(logs1).toBe('logs');
+    expect(logs2).toBe('logs');
   });
 
   it('should restart the cloud CLI server', async () => {

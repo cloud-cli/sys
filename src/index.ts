@@ -49,7 +49,8 @@ WantedBy=multi-user.target
 }
 
 async function logs(options) {
-  const args = ['-n', String(options.lines || 100), '_PID=' + process.pid];
+  const { lines = 100 } = options;
+  const args = ['-n', String(lines), '_PID=' + process.pid];
   const o = await exec('journalctl', args);
 
   return o.stdout;
