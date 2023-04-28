@@ -55,4 +55,4 @@ function logs(options) {
   return o.stdout;
 }
 
-export default { update, install, restart, createService };
+export default { update, install, restart, createService, logs };
