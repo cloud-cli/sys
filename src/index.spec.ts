@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import * as exec from '@cloud-cli/exec';
 import sys from './index';
 
@@ -18,6 +18,16 @@ describe('system commands', () => {
 
     await expect(sys.install({ m: 'test' })).resolves.toBe(true);
     expect(exec.exec).toHaveBeenCalledWith('npm', ['i', '@cloud-cli/test']);
+  });
+
+  it('should run a command', async () => {
+    jest
+      .spyOn(exec, 'execString')
+      .mockReset()
+      .mockImplementationOnce(async () => execOutput);
+
+    await expect(sys.run({ c: 'ls -al' })).resolves.toBe('');
+    expect(exec.execString).toHaveBeenCalledWith('ls -al');
   });
 
   it('should update all modules', async () => {

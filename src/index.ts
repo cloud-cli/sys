@@ -1,7 +1,8 @@
-import { exec } from '@cloud-cli/exec';
-import fs from 'fs';
+import { exec, execString } from '@cloud-cli/exec';
+import * as fs from 'fs';
 
 interface InstallOptions { m: string }
+interface RunOptions { c: string }
 
 async function update() {
   `Update dependencies`;
@@ -23,6 +24,13 @@ async function restart() {
 
   setTimeout(() => exec('systemctl', ['restart', 'cloud']), 100);
   return true;
+}
+
+async function run({ c }: RunOptions) {
+  `Run a commmand`;
+
+  const o = await execString(c);
+  return o.ok ? o.stdout : Promise.reject(o.stderr);
 }
 
 function createService() {
@@ -70,4 +78,4 @@ async function logs(options) {
   return o.stdout;
 }
 
-export default { update, install, restart, createService, logs, stats };
+export default { update, install, restart, createService, logs, stats, run };
