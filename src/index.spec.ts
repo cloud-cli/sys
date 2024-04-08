@@ -26,7 +26,7 @@ describe('system commands', () => {
       .mockReset()
       .mockImplementationOnce(async () => execOutput);
 
-    await expect(sys.update({})).resolves.toBe(true);
+    await expect(sys.update()).resolves.toBe(true);
     expect(exec.exec).toHaveBeenCalledWith('npm', ['update']);
   });
 
@@ -52,7 +52,7 @@ describe('system commands', () => {
       .mockReset()
       .mockImplementation(async () => outputs.shift());
 
-    await expect(sys.stats({})).resolves.toBe(diskOutput.stdout + '\n\n' + memoryOutput.stdout);
+    await expect(sys.stats()).resolves.toBe(diskOutput.stdout + '\n\n' + memoryOutput.stdout);
 
     expect(exec.exec).toHaveBeenCalledWith('df', ['-hl', '-x', 'overlay', '--output=target,size,avail,pcent']);
     expect(exec.exec).toHaveBeenCalledWith('free', ['-h']);
