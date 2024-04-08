@@ -20,16 +20,6 @@ describe('system commands', () => {
     expect(exec.exec).toHaveBeenCalledWith('npm', ['i', '@cloud-cli/test']);
   });
 
-  it('should update a module', async () => {
-    jest
-      .spyOn(exec, 'exec')
-      .mockReset()
-      .mockImplementationOnce(async () => execOutput);
-
-    await expect(sys.update({ m: 'test' })).resolves.toBe(true);
-    expect(exec.exec).toHaveBeenCalledWith('npm', ['update', '@cloud-cli/test']);
-  });
-
   it('should update all modules', async () => {
     jest
       .spyOn(exec, 'exec')
@@ -38,6 +28,34 @@ describe('system commands', () => {
 
     await expect(sys.update({})).resolves.toBe(true);
     expect(exec.exec).toHaveBeenCalledWith('npm', ['update']);
+  });
+
+  it('should show system stats', async () => {
+    const memoryOutput = {
+      ok: true,
+      code: 0,
+      stdout: 'whatever\nMem:   16Gi  1Gi  15Gi',
+      stderr: '',
+    };
+
+    const diskOutput = {
+      ok: true,
+      code: 0,
+      stdout: 'whatever\n/data.    20G    10G  50%',
+      stderr: '',
+    };
+
+    const outputs = [diskOutput, memoryOutput];
+
+    jest
+      .spyOn(exec, 'exec')
+      .mockReset()
+      .mockImplementation(async () => outputs.shift());
+
+    await expect(sys.stats({})).resolves.toBe(diskOutput.stdout + '\n\n' + memoryOutput.stdout);
+
+    expect(exec.exec).toHaveBeenCalledWith('df', ['-hl', '-x', 'overlay', '--output=target,size,avail,pcent']);
+    expect(exec.exec).toHaveBeenCalledWith('free', ['-h']);
   });
 
   it('should capture update errors', async () => {
@@ -50,7 +68,7 @@ describe('system commands', () => {
         stderr: 'npm failed',
       }));
 
-    await expect(sys.update({})).rejects.toEqual(new Error('npm failed'));
+    await expect(sys.update()).rejects.toEqual(new Error('npm failed'));
     expect(exec.exec).toHaveBeenCalledTimes(1);
   });
 
