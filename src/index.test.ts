@@ -1,6 +1,10 @@
 import * as fs from 'fs';
 import * as exec from '@cloud-cli/exec';
 import sys from './index';
+import { vi, describe, it, expect } from 'vitest';
+
+vi.mock('fs');
+vi.mock('@cloud-cli/exec');
 
 const execOutput = {
   ok: true,
@@ -11,8 +15,7 @@ const execOutput = {
 
 describe('system commands', () => {
   it('should install a module', async () => {
-    jest
-      .spyOn(exec, 'exec')
+    vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementationOnce(async () => execOutput);
 
@@ -21,8 +24,7 @@ describe('system commands', () => {
   });
 
   it('should run a command', async () => {
-    jest
-      .spyOn(exec, 'execString')
+    vi.spyOn(exec, 'execString')
       .mockReset()
       .mockImplementationOnce(async () => execOutput);
 
@@ -31,8 +33,7 @@ describe('system commands', () => {
   });
 
   it('should update all modules', async () => {
-    jest
-      .spyOn(exec, 'exec')
+    vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementationOnce(async () => execOutput);
 
@@ -57,8 +58,7 @@ describe('system commands', () => {
 
     const outputs = [diskOutput, memoryOutput];
 
-    jest
-      .spyOn(exec, 'exec')
+    vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementation(async () => outputs.shift());
 
@@ -69,8 +69,7 @@ describe('system commands', () => {
   });
 
   it('should capture update errors', async () => {
-    jest
-      .spyOn(exec, 'exec')
+    vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementationOnce(async () => ({
         ...execOutput,
@@ -83,8 +82,7 @@ describe('system commands', () => {
   });
 
   it('should capture install errors', async () => {
-    jest
-      .spyOn(exec, 'exec')
+    vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementationOnce(async () => ({
         ...execOutput,
@@ -98,8 +96,7 @@ describe('system commands', () => {
 
   it('should retrieve cloudy logs', async () => {
     const output = { ...execOutput, stdout: 'logs' };
-    jest
-      .spyOn(exec, 'exec')
+    vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementation(async () => output);
 
@@ -114,8 +111,7 @@ describe('system commands', () => {
   });
 
   it('should restart the cloud CLI server', async () => {
-    jest
-      .spyOn(exec, 'exec')
+    vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementationOnce(async () => execOutput);
 
@@ -127,7 +123,7 @@ describe('system commands', () => {
   });
 
   it('should create a cloud systemctl file', () => {
-    jest.spyOn(fs, 'writeFileSync');
+    vi.spyOn(fs, 'writeFileSync');
     sys.createService();
     expect(fs.writeFileSync).toHaveBeenCalledWith(process.cwd() + '/cloud.service', expect.any(String));
   });
