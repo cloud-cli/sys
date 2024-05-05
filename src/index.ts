@@ -51,7 +51,6 @@ Environment=DEBUG=1
 
 [Install]
 WantedBy=multi-user.target
-}
 `;
 
   fs.writeFileSync(pwd + '/cloud.service', service);
