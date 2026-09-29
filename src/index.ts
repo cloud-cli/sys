@@ -1,8 +1,12 @@
 import { exec, execString } from '@cloud-cli/exec';
 import * as fs from 'fs';
 
-interface InstallOptions { m: string }
-interface RunOptions { c: string }
+interface InstallOptions {
+  m: string;
+}
+interface RunOptions {
+  c: string;
+}
 
 async function update() {
   `Update dependencies`;
@@ -77,4 +81,28 @@ async function logs(options) {
   return o.stdout;
 }
 
-export default { update, install, restart, createService, logs, stats, run };
+export default {
+  update,
+  install,
+  restart,
+  createService,
+  logs,
+  stats,
+  run,
+  help: () => ({
+    description: 'System administration functions',
+    commands: {
+      'sys update': 'Update dependencies',
+      'sys install --m <plugin>': 'Install a Cloudy plugin',
+      'sys restart': 'Restart the cloud service',
+      'sys run --c <command>': 'Run a command',
+      'sys logs [--lines <n>]': 'Show recent system log entries',
+      'sys stats': 'Show memory and disk usage stats',
+    },
+    options: {
+      lines: 'Number of log lines to show (default: 100)',
+      command: 'Command to execute',
+      m: 'Plugin name',
+    },
+  }),
+};
