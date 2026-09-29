@@ -1,5 +1,6 @@
 import { exec, execString } from '@cloud-cli/exec';
 import * as fs from 'fs';
+import { help } from '@cloud-cli/cli';
 
 interface InstallOptions {
   m: string;
@@ -89,20 +90,18 @@ export default {
   logs,
   stats,
   run,
-  help: () => ({
-    description: 'System administration functions',
-    commands: {
-      'sys update': 'Update dependencies',
-      'sys install --m <plugin>': 'Install a Cloudy plugin',
-      'sys restart': 'Restart the cloud service',
-      'sys run --c <command>': 'Run a command',
-      'sys logs [--lines <n>]': 'Show recent system log entries',
-      'sys stats': 'Show memory and disk usage stats',
-    },
-    options: {
-      lines: 'Number of log lines to show (default: 100)',
-      command: 'Command to execute',
-      m: 'Plugin name',
-    },
-  }),
+  [help]: () => `System administration functions
+
+Available commands:
+  sys update - Update dependencies
+  sys install --m <plugin> - Install a Cloudy plugin
+  sys restart - Restart the cloud service
+  sys run --c <command> - Run a command
+  sys logs [--lines <n>] - Show recent system log entries
+  sys stats - Show memory and disk usage stats
+
+Options:
+  lines - Number of log lines to show (default: 100)
+  command - Command to execute
+  m - Plugin name`,
 };

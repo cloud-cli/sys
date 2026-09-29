@@ -2,9 +2,17 @@ import * as fs from 'fs';
 import * as exec from '@cloud-cli/exec';
 import sys from './index';
 import { vi, describe, it, expect } from 'vitest';
+import { help } from '@cloud-cli/cli';
 
 vi.mock('fs');
 vi.mock('@cloud-cli/exec');
+vi.mock('@cloud-cli/cli', async (importOriginal) => {
+  const mod: any = await importOriginal();
+  return {
+    ...mod,
+    help: mod.help,
+  };
+});
 
 const execOutput = {
   ok: true,
@@ -126,5 +134,28 @@ describe('system commands', () => {
     vi.spyOn(fs, 'writeFileSync');
     sys.createService();
     expect(fs.writeFileSync).toHaveBeenCalledWith(process.cwd() + '/cloud.service', expect.any(String));
+  });
+
+  describe('help', () => {
+    it('should have a [help] Symbol export that is a function', () => {
+      expect(sys[help]).toBeDefined();
+      expect(typeof sys[help]).toBe('function');
+    });
+
+    it('should return a string help text', () => {
+      const helpText = sys[help]();
+      expect(typeof helpText).toBe('string');
+      expect(helpText).toContain('System');
+      expect(helpText).toContain('sys update');
+      expect(helpText).toContain('sys install');
+      expect(helpText).toContain('sys restart');
+      expect(helpText).toContain('sys run');
+      expect(helpText).toContain('sys logs');
+      expect(helpText).toContain('sys stats');
+    });
+
+    it('should not expose "help" as a normal command key', () => {
+      expect(sys.help).toBeUndefined();
+    });
   });
 });
