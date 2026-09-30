@@ -150,6 +150,7 @@ describe('system commands', () => {
       expect(helpText).toContain('sys install');
       expect(helpText).toContain('sys restart');
       expect(helpText).toContain('sys run');
+      expect(helpText).toContain('sys createService');
       expect(helpText).toContain('sys logs');
       expect(helpText).toContain('sys stats');
     });

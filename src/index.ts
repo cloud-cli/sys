@@ -97,6 +97,7 @@ Available commands:
   sys install --m <plugin> - Install a Cloudy plugin
   sys restart - Restart the cloud service
   sys run --c <command> - Run a command
+  sys createService - Generate a systemd template for Cloudy
   sys logs [--lines <n>] - Show recent system log entries
   sys stats - Show memory and disk usage stats
 
