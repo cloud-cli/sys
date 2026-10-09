@@ -41,12 +41,23 @@ describe('system commands', () => {
   });
 
   it('should update all modules', async () => {
+    vi.spyOn(fs, 'existsSync').mockReturnValue(false);
     vi.spyOn(exec, 'exec')
       .mockReset()
       .mockImplementationOnce(async () => execOutput);
 
     await expect(sys.update()).resolves.toBe(true);
     expect(exec.exec).toHaveBeenCalledWith('npm', ['update']);
+  });
+
+  it('should use pnpm when a pnpm lock file is present', async () => {
+    vi.spyOn(fs, 'existsSync').mockReturnValue(true);
+    vi.spyOn(exec, 'exec')
+      .mockReset()
+      .mockImplementationOnce(async () => execOutput);
+
+    await expect(sys.update()).resolves.toBe(true);
+    expect(exec.exec).toHaveBeenCalledWith('pnpm', ['update']);
   });
 
   it('should show system stats', async () => {

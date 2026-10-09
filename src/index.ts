@@ -12,7 +12,8 @@ interface RunOptions {
 async function update() {
   `Update dependencies`;
 
-  const o = await exec('npm', ['update']);
+  const packageManager = fs.existsSync('pnpm-lock.yaml') ? 'pnpm' : 'npm';
+  const o = await exec(packageManager, ['update']);
   return o.ok || Promise.reject(new Error(o.stderr));
 }
 
