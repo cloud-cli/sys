@@ -155,19 +155,20 @@ describe('system commands', () => {
 
     it('should return a string help text', () => {
       const helpText = sys[help]();
+      expect(typeof help).toBe('symbol');
       expect(typeof helpText).toBe('string');
       expect(helpText).toContain('System');
-      expect(helpText).toContain('sys update');
-      expect(helpText).toContain('sys install');
-      expect(helpText).toContain('sys restart');
-      expect(helpText).toContain('sys run');
-      expect(helpText).toContain('sys createService');
-      expect(helpText).toContain('sys logs');
-      expect(helpText).toContain('sys stats');
+      expect(helpText).toContain('sys.update');
+      expect(helpText).toContain('sys.install');
+      expect(helpText).toContain('sys.restart');
+      expect(helpText).toContain('sys.run');
+      expect(helpText).toContain('sys.createService');
+      expect(helpText).toContain('sys.logs');
+      expect(helpText).toContain('sys.stats');
     });
 
     it('should not expose "help" as a normal command key', () => {
-      expect(sys.help).toBeUndefined();
+      expect(Object.hasOwn(sys, 'help')).toBe(false);
     });
   });
 });
